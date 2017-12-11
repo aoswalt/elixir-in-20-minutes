@@ -40,21 +40,64 @@ end
 ```
 
 ## Types
-- atom (symbol) (alias)
-- boolean
-- integer
-- float
-- string (binary) (charlist) (sigil)
-- tuple
-- list (linked) (iodata)
-- keyword list
-- map
-- struct
-- function (named & anonymous) (arity)
+- nil
+- atom (symbol) `:atom`
+  - alias `Atom == :"Elixir.Atom"`
+- boolean `true == :true`
+- integer `1000000 == 1_000_000`
+- float `0.01 == 1.0e-2`
+- string (binary) `"hi" == <<104, 105>>`
+  - charlist `'hi' == [104, 105]`
+  - sigil `"foo" =~ ~r/foo|bar/` `~r"foo|bar"i == sigil_r(<<"foo|bar">>, 'i')`
+  - heredoc
+  ```elixir
+  """
+  this is
+  a heredoc string
+  """
+  ```
+- tuple `{:ok, {:sent, "data"}}`
+- list `[1, "b", :c, true]`
+  - linked `[1 | [2 | [3 | []]]]`
+  - io list `["Hello, ", [87, 111, 114, 108, 100]] == "Hello, World"`
+- keyword list `[{:a, 1}, {:a, 0}, {:b, 2}] == [a: 1, a: 0, b: 2]`
+  - accessing `kw_list[:a] == 1`
+- map `%{"a" => 1, :b => 2, 3 => "c"}` `%{a: 1, b: 2}`
+  - accessing `map[:a] == map.a`
+- struct `%City{name: "Nashville"} == %{__struct__: City, name: "Nashville"}`
+- function
+  ```elixir
+  def add(a, b) do
+    a + b
+  end
+  ```
+  - keyword list format
+  ```elixir
+  def add(a, b), do: a + b
+  ```
+  - anonymous
+  ```elixir
+  add = fn (a, b) -> a + b end
+  add.(1, 2)
+  ```
+  - arity
+  ```elixir
+  def add(a, b), do: a + b          # add/2
+  def add(a, b, c), do: a + b + c   # add/3
+  ```
   - capturing
+  ```elixir
+  def add(a, b), do: a + b
+  fun = &add/2
+  ```
   - default arguments
+  ```elixir
+  def hello(name \\ "world") do
+    "hello, " <> name
+  end
+  ```
 
-is_type
+Types can be checked with the `is_type` functions, such as `is_atom`, `is_binary`, `is_map`, etc.
 
 ## Operators
 - arithmetic (+, -, *, /, div, rem)
@@ -125,5 +168,6 @@ railway oriented / happy-path programming - with
 
 ## Resources
 - [Elixir Docs](https://elixir-lang.org/getting-started/introduction.html)
+- [hexdocs Elixir](https://hexdocs.pm/elixir/)
 - Programming Elixir
 - Elixir In Action
