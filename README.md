@@ -387,7 +387,40 @@ Size.size(%{a: 1}) == 1
 Size.size([1, 2, 3])  # Protocol.UndefinedError
 ```
 
-## Behaviours (apis)
+## Behaviours
+
+Similar to interfaces in object oriented languages, behaviours define a public API that must be
+implemented for a module to encapsulate varying sets of logic.
+
+```elixir
+defmodule Parser do
+  @callback parse(String.t) :: {:ok, term} | {:error, String.t}
+  @callback extensions() :: [String.t]
+
+  def parse!(implementation, contents) do
+    case implementation.parse(contents) do
+      {:ok, data} -> data
+      {:error, error} -> raise ArgumentError, "parsing error: #{error}"
+    end
+  end
+end
+
+
+defmodule JSONParser do
+  @behaviour Parser
+
+  def parse(str), do: # ... parse JSON
+  def extensions, do: ["json"]
+end
+
+defmodule YAMLParser do
+  @behaviour Parser
+
+  def parse(str), do: # ... parse YAML
+  def extensions, do: ["yml"]
+end
+```
+
 
 ## Error Handling
 ### error
