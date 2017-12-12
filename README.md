@@ -3,6 +3,9 @@
 [Elixir](https://elixir-lang.org/) is a functional programming language built on top of [Erlang](http://www.erlang.org/).
 Its focus is on building scalable and maintainable software on distributed and fault-tolerant systems.
 
+#### Web Server Comparison
+[![Web Server Comparsion](./images/web-server-comparison.jpg "Web Server Comparison")](https://www.manning.com/books/elixir-in-action)
+
 ## History
 - Erlang was created in 1986 by Ericsson to drive their telephone switches.
   - OTP, originally an acronym for Open Telecom Platform, is a collection of components that forms the foundation of Erlang's resilience.
@@ -169,5 +172,5 @@ railway oriented / happy-path programming - with
 ## Resources
 - [Elixir Docs](https://elixir-lang.org/getting-started/introduction.html)
 - [hexdocs Elixir](https://hexdocs.pm/elixir/)
-- Programming Elixir
-- Elixir In Action
+- [Programming Elixir](https://pragprog.com/book/elixir13/programming-elixir-1-3)
+- [Elixir In Action](https://www.manning.com/books/elixir-in-action)
