@@ -221,7 +221,7 @@ Types can be checked with the `is_type` functions, such as `is_atom`, `is_binary
 Except for a small set of core functions that operate at the system level, such as `Calendar.date/0`,
 all functions in Elixir transform input into output.
 
-### Modules (alias, require, import, use) (attributes)
+### Modules
 
 Modules serve as a mechanism to group related functions and provide a namespace.
 
