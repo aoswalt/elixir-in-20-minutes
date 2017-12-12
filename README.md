@@ -456,10 +456,73 @@ crash allows a clean state to be restored. The strategies defined in the applica
 implemented to account for these unpredictable occurances.
 
 ## Tooling
-### ExUnit (doctest)
+
+Elixir includes a robust set of tooling to aid in development.
+
 ### Mix
+
+Akin to Node's NPM and Ruby's rake, Elixir comes with the general purpose build tool Mix.
+
+`mix new <name>` is used to generate a fresh project.
+
+Typically a project is defined in a `mix.exs` file, defining the varying options including dependencies,
+tasks, and configuration paths.
+
+With a defined project, mix tasks can be run from the command line:
+- `mix compile` to compile the project
+- `mix test` to run the test suite for the project
+- `mix run` for specific commands in the project
+- `mix help` lists available tasks including those defined in the mix file
+
 ### IEx
-### types (docs and dialyzer)
+
+IEx is Elixir's interactive shell. It includes various helpers for various tasks and inspection. The list
+of helpers can be accessed with `h()`.
+
+Remote nodes may be connected to from the local session to interact with already running applications.
+
+### ExUnit
+
+ExUnit is the full test framework included with Elixir.
+
+Tests are defined in script files, typically defined in the `test` directory named `<filename>_test.exs` for
+each file in the `lib` directory.
+
+Tests use `ExUnit.Case` to inject the API and define tests with the `test/2` macro. A `test/test_helper.exs`
+file is responsible for setting up the test framework.
+
+ExUnit allows for documentation to embed tests alongside the functions being documented.
+
+```elixir
+@doc """
+Add 2 numbers together.
+
+## Examples
+
+  iex> add(1, 2)
+  3
+
+"""
+def add(a, b) do
+  a + b
+end
+```
+
+### typespecs
+
+Being a dynamically typed language, types are not enforced during compilation; however, Elixir has support for
+typespecs, a notation for declaring data types and specifications for typed function signatures.
+
+```elixir
+@spec add(number, number) :: number
+def add(a, b) do
+  a + b
+end
+```
+
+Typespecs server as an additional layer of documentation. Also, Dialyzer is an Erlang tool for static code
+analysis to check code against the defined types and specs. The Dialyxir application provides an Elixir
+focused wrapper for Dialyzer.
 
 ## processes
 ### lightweight (!= threads)
