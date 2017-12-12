@@ -568,13 +568,56 @@ A process may trap exits from other processess, allowing it to take action on th
 This mechanism forms the foundation of the system's fault tolerance.
 
 ## OTP
+
+Originally the Open Telecom Platform, OTP has grown beyond being limited to a small range of applications. It
+includes a wide array of tools and components for building a distributed, fault-tolerant system.
+
 ### GenServer
+
+Abstracting the manual setup of a state-holding process, Elixir provides the GenServer behaviour module as a
+foundational unit to build upon.
+
+#### Agents
+
+When persistent state is needed without the full support for varying operations, Elixir provides the Agent module
+to abstract away the unneeded complexity.
+
 ### Supervisor
-### supervision trees (let it crash)
-### ETS
-### Mnesia
-### Applications
+
+A Supervisor manages the lifecycle of its GenServer children, defining their restart strategies, initial state, and
+serving as an API.
+
+### Supervision Trees
+
+By allowing Supervisors to supervise other Supervisors, a supervision tree can be constructed to encapsulate
+crashes and protect the rest of the system from unexpected circumstances.
+
+This forms the "let it crash" philosophy. With proper separation of concerns and well-defined supervision
+strategies, a GenServer with unexpected state can crash and be restarted with well-formed state in an attempt to
+gracefully handle the situation. In the event the issue persists, the failures will begin to bubble up the
+supervision tree until a good state is achieved or the entire application crashes.
+
 ### Umbrella Applications
+
+One of the primary uses of applications is to separate supervision responsibilities. When a supervision tree can
+be isolated from the remainder of the system, it can be broken out into a separate application to be joined
+together under an umbrella application.
+
+This provides a way to have separate concerns within the same code base but allow different managment strategies.
+
+### ETS
+
+Inherently, process state is contained only within that process, so the process can become a bottleneck in the
+system.
+
+Erlang provides an in-memory key-value data store known as ETS, or Erlang Term Storage. Once the bottleneck in
+the system is well-defined, ETS can serve as a caching mechanism for data.
+
+### Mnesia
+
+When ETS does not fit the needs and a more thorough system is needed, Erlang provides Mnesia, an in-memory
+relational and object hyprid Database Management System. The system is fully in-memory, but it has stood the test
+of time in well-developed systems when the situation is appropriate.
 
 ## Macros
 
