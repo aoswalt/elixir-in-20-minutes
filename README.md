@@ -204,7 +204,47 @@ An example web server may include a set of distinct applications for its separat
 - event sourcing handlers
 
 ## Pattern Matching
-railway oriented / happy-path programming - with
+
+Pattern matching forms a fundamental part of control flow in elixir.
+
+A function may be defined with multiple clauses.
+When called, each clauses will be tested in the order defined until a match is found.
+If no match is found, an error is raised.
+
+```elixir
+defmodule Math do
+  def zero?(0), do: true
+  def zero?(n) when is_integer(n), do: false
+end
+
+Math.zero?(0) == true
+Math.zero?(1) == false
+math.zero?(0.5)  # FunctionClauseError
+```
+
+Pattern matching enables a programming style known as railway-oriented or happy-path programming.
+Functions with a more likely possiblity of failure typically return `:ok`/`:error` tuples
+such as `{:ok, data}` and `{:error, error}`.
+
+This allows for functions to be piped together.
+The successful operations continue being processed while any errors are rerouted to be handled gracefully.
+
+A common practice is to use `with` to handle the branching paths.
+
+```elixir
+with {:ok, response} <- Api.fetch(@url),
+     mapped_data = Enum.map(response, &format/1),
+     {:ok, processed} <- Lib.process(mapped_data) do
+  {:ok, processed}
+else
+  {:error, {:network_error, fetch_details}} ->
+    {:error, format_error_details(details)},
+  {:error, {:processing_error, processing_details}} ->
+    {:error, processing_details},
+  error ->
+    {:error, error}
+end
+```
 
 ## Control Flow
 ### if/unless
