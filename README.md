@@ -539,6 +539,10 @@ processes the communicate by message passing.
 Each process is a lightweight unit separate from operating system processes and threads. It is not uncommon to
 have tens or hundreds of thousands of processes running simultaneously on a single machine.
 
+### Tasks
+
+When simple async operations are needed, Elixir provides the Task module as a simple interface.
+
 ### Messaging
 
 Each process has a mailbox used in the message passing communication between processes.
