@@ -292,10 +292,68 @@ end
 Insead of special constructs, `if` and `unless` are implemented as macros around `cond`.
 
 ## Recursion
-### for is mutability
-#### comprehensions
-### reduce & map algorithms
-### Enumerable (eager Enum vs lazy Stream)
+
+Functional languages make use of recursion more commonly than object oriented languages due to immutability.
+Common `for` loops rely on mutability in incrementing the counter.
+
+Elixir is optimized for tail calls such that, if the last operation of a function is a call to itself,
+a new stack frame is not allocated, making it a free operation. Languages without this optimization can lead
+to stack overflows at large recursive tasks.
+
+Pattern matching allows for simpler recurive functions by separating conditions into separate clauses.
+```elixir
+def print_repeated(msg, count) when count <= 1 do
+  IO.puts msg
+end
+
+def print_repeated(msg, count) do
+  IO.puts msg
+  print_repeated(msg, count - 1)
+end
+
+print_repeated("echo", 4)   # prints "echo" 4 times
+```
+
+### Enumerable
+
+Data structures in Elixir are enumerable if they implement the `Enumerable` protocol.
+
+These data structures, including lists and maps, work with functions in the `Enum` module and its lazy
+counterpart the `Stream` module.
+These modules provide methods, such as `map`, `filter`, and `reduce`, for working with collections of data.
+
+- Sum the double value of all even numbers from 1 to 100,000, iterating over the collection for each operation.
+```elixir
+1..100_000
+|> Enum.filter(even?)
+|> Enum.map(&(&1 * 2))
+|> Enum.sum
+```
+
+- Using the lazy `Stream`, the collection is only iterated over once.
+```elixir
+1..100_000
+|> Stream.filter(even?)
+|> Stream.map(&(&1 * 2))
+|> Enum.sum
+```
+
+### Comprehensions
+
+Because it is common to iterate over enumerables to transform the collection, Elixir offers the comprehension
+construct composed of generators, filters, and collectables.
+- generators provide the collection to be used
+- filters limit the operation to the values satisfying the filter
+- collectables provide a mechanism to convert to a different data structure
+
+```elixir
+for {key, val} <- %{"a" => 1, "b" => 2}, into: %{}, do: {key, val * val}
+%{"a" => 1, "b" => 4}
+
+```
+- `%{"a" => 1, "b" => 2}` uses the elements of a map as the generator
+- `{key, val}` pattern matches to extract the elements and filters to only operate on tuples
+- `into: %{}` uses a map as a collectable, mapping the tuples into the new map
 
 ## Protocols (polymorphism)
 
