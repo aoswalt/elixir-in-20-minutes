@@ -8,7 +8,7 @@ Its focus is on building scalable and maintainable software on distributed and f
 
 ## History
 - Erlang was created in 1986 by Ericsson to drive their telephone switches.
-  - OTP, originally an acronym for Open Telecom Platform, is a collection of components that forms the foundation of Erlang's resilience.
+  - OTP, originally an acronym for Open Telecom Platform, is a collection of components that comprise the foundation of Erlang's resilience.
 - Elixir was created by José Valim as an R&D project of Plataformatec.
   - José was a member of the Rails core team and wanted to build a friendly language like Ruby.
   - The goal was to build a more extensible and developer-friendly language while staying compatible with Erlang.
@@ -103,15 +103,51 @@ end
 Types can be checked with the `is_type` functions, such as `is_atom`, `is_binary`, `is_map`, etc.
 
 ## Operators
-- arithmetic (+, -, *, /, div, rem)
-- list manipulation (++, --)
-- string concatenation (<>)
-- boolean (or, and, not) (require boolean, short circuit)
-  - (||, &&, !) (any type, all but false and nil are true)
-- comparison (==, !=, ===, !==, >=, <=, <, >)
-- data type ordering (number < atom < reference < function < port < pid < tuple < map < list < bitstring)
-- pin (assignment)
-- pipe
+- arithmetic (`+`, `-`, `*`, `/`, `div`, `rem`)
+  - `/` always produces a float result
+  - `div` and `rem` are integer division and remainder operators
+- list manipulation (`++`, `--`)
+  ```elixir
+  [1, 2, 3] ++ [4, 5, 6] == [1, 2, 3, 4, 5, 6]
+  [1, 2, 3] -- [2] == [1, 3]
+  ```
+- string concatenation (`<>`)
+  ```elixir
+  "foo" <> "bar" == "foobar"
+  ```
+- strict boolean (`or`, `and`, `not`)
+  - require boolean as first operand
+- lax boolean (`||`, `&&`, `!`)
+  - accepts any type
+  - everything except false and nil are true
+- comparison (`==`, `!=`, `===`, `!==`, `>=`, `<=`, `<`, `>`)
+  ```elixir
+  1 == 1.0   # true
+  1 === 1.0  # false
+  ```
+- data type ordering
+  ```elixir
+  number < atom < reference < function < port < pid < tuple < map < list < bitstring
+  ```
+- match (`=`)
+  ```elixir
+  a = "a"   # "a"
+  "a" = a   # "a"
+  "b" = a   # MatchError
+  ```
+- pin (`^`)
+  ```elixir
+  a = "a"   # "a"
+  ^a = "b"  # MatchError
+  ```
+- pipe (`|>`)
+  ```elixir
+  String.replace(String.upcase("hello world"), " ", "_")
+
+  "hello world"
+  |> String.upcase
+  |> String.replace(" ", "_")
+  ```
 
 ## Code Organization
 ### Functions
