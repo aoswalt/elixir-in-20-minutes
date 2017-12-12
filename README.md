@@ -602,6 +602,12 @@ have tens or hundreds of thousands of processes running simultaneously on a sing
 
 When simple async operations are needed, Elixir provides the Task module as a simple interface.
 
+```elixir
+task = Task.async(fn -> do_some_work() end)
+res  = do_some_other_work()
+res + Task.await(task)
+```
+
 ### Messaging
 
 Each process has a mailbox used in the message passing communication between processes.
