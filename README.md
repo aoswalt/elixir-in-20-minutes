@@ -385,14 +385,14 @@ These modules provide methods, such as `map`, `filter`, and `reduce`, for workin
 - Sum the double value of all even numbers from 1 to 100,000, iterating over the collection for each operation.
   ```elixir
   1..100_000
-  |> Enum.filter(even?)
+  |> Enum.filter(&Integer.is_even/1)
   |> Enum.map(&(&1 * 2))
   |> Enum.sum
   ```
 - Using the lazy `Stream`, the collection is only iterated over once.
   ```elixir
   1..100_000
-  |> Stream.filter(even?)
+  |> Stream.filter(&Integer.is_even/1)
   |> Stream.map(&(&1 * 2))
   |> Enum.sum
   ```
