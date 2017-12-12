@@ -125,10 +125,10 @@ Types can be checked with the `is_type` functions, such as `is_atom`, `is_binary
   1 == 1.0   # true
   1 === 1.0  # false
   ```
-- data type ordering
-  ```elixir
-  number < atom < reference < function < port < pid < tuple < map < list < bitstring
-  ```
+  - data type ordering
+    ```elixir
+    number < atom < reference < function < port < pid < tuple < map < list < bitstring
+    ```
 - match (`=`)
   ```elixir
   a = "a"   # "a"
