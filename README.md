@@ -524,12 +524,44 @@ Typespecs server as an additional layer of documentation. Also, Dialyzer is an E
 analysis to check code against the defined types and specs. The Dialyxir application provides an Elixir
 focused wrapper for Dialyzer.
 
-## processes
-### lightweight (!= threads)
-### mailboxes & messaging
-### linking
-### state via receive recursion
-### tasks & agents
+## Processes
+
+Processes form the core of state and concurrency in Elixir. The scheduler ensures all processes get equal
+opportunity to run and spread the work across the entire system.
+
+### Actor Model
+
+Elixir is built on the actor model, a model of concurrency that separates operations into separate, isolated
+processes the communicate by message passing.
+
+### Lightweight
+
+Each process is a lightweight unit separate from operating system processes and threads. It is not uncommon to
+have tens or hundreds of thousands of processes running simultaneously on a single machine.
+
+### Messaging
+
+Each process has a mailbox used in the message passing communication between processes.
+
+Messages are sent to processes by `send/2`, and the messages wait in the process's mailbox until retrieved with
+`receive/1`.
+
+### Keeping State
+
+Being an immutable language, state cannot be kept by updating a map. Using recursion and messaging, a process
+may be used to keep persistent state.
+
+By entering a recursive loop in a process's `recieve/1` block, state may be manipulated and routed back through
+the loop. The process can respond to messages requesting the state and updating the state to form the model of
+persistence.
+
+### Links
+
+Processes are generally spawned as linked processes. Processes linked together propogate exit signals to other
+linked processes.
+
+A process may trap exits from other processess, allowing it to take action on the exits instead of exiting itself.
+This mechanism forms the foundation of the system's fault tolerance.
 
 ## OTP
 ### GenServer
