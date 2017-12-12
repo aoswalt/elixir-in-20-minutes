@@ -186,6 +186,8 @@ Multiple modules may be referenced by the same directive by using braces.
 alias MyApp.{Foo, Bar, Baz}
 ```
 
+Module attributes, defined with `@` such as `@limit 10`, are commonly used to defined module scoped constants.
+
 Defining a struct inside a module creates a tagged map that allows for
 compile time guarantees, default values, and a common data element to build functions around.
 
