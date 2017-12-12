@@ -198,7 +198,7 @@ may be re-used in other systems.
 Applications form the building blocks of a full Elixir system.
 
 An example web server may include a set of distinct applications for its separate concerns:
-- web api
+- web API
 - database access
 - encapsulated library of business logic
 - event sourcing handlers
@@ -437,17 +437,17 @@ Many libraries provide pairs of functions that deal with more unpredictable oper
 returns `:ok/:error` tupeles, and the `foo!` form raises execptions. This separation allows the developer
 to choose how to deal with the exceptional circumstances.
 
-### throw
+### Throw
 
 `throw` and `catch` are typically reserved for working with libraries that do not have a proper API and a
 value can only be accessed in a `catch` after a `throw`.
 
-### exit
+### Exit
 
 Within Elixir's processes, an `exit` signal informs a process to die. This forms one of the foundational
 aspects of the system's fault-tolerance.
 
-### let it crash
+### Let It Crash
 
 Once all of the predictable error situations are accounted for in a developed system, the accepted strategy
 is to "let it crash". Typically, these circumstances are caused by an unexpected state, and letting the process
@@ -507,7 +507,7 @@ def add(a, b) do
 end
 ```
 
-### typespecs
+### Typespecs
 
 Being a dynamically typed language, types are not enforced during compilation; however, Elixir has support for
 typespecs, a notation for declaring data types and specifications for typed function signatures.
