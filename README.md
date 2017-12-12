@@ -44,14 +44,41 @@ end
 
 ## Types
 - nil
-- atom (symbol) `:atom`
-  - alias `Atom == :"Elixir.Atom"`
-- boolean `true == :true`
-- integer `1000000 == 1_000_000`
-- float `0.01 == 1.0e-2`
-- string (binary) `"hi" == <<104, 105>>`
-  - charlist `'hi' == [104, 105]`
-  - sigil `"foo" =~ ~r/foo|bar/` `~r"foo|bar"i == sigil_r(<<"foo|bar">>, 'i')`
+- atom (symbol)
+```elixir
+:atom
+```
+  - alias
+  ```elixir
+  Atom == :"Elixir.Atom"
+  ```
+- boolean
+```elixir
+true == :true
+```
+- integer
+```elixir
+1000000 == 1_000_000
+```
+- float
+```elixir
+0.01 == 1.0e-2
+```
+- string (binary)
+```elixir
+"hi" == <<104, 105>>
+```
+  - charlist
+  ```elixir
+  'hi' == [104, 105]
+  ```
+  - sigil
+  ```elixir
+  ~S(No \n escaping or #{interpolating}) == "No \\n escaping or \#{interpolating}"
+
+  "foo" =~ ~r/foo|bar/
+  ~r"foo|bar"i == sigil_r(<<"foo|bar">>, 'i')
+  ```
   - heredoc
   ```elixir
   """
@@ -59,32 +86,64 @@ end
   a heredoc string
   """
   ```
-- tuple `{:ok, {:sent, "data"}}`
-- list `[1, "b", :c, true]`
-  - linked `[1 | [2 | [3 | []]]]`
-  - io list `["Hello, ", [87, 111, 114, 108, 100]] == "Hello, World"`
-- keyword list `[{:a, 1}, {:a, 0}, {:b, 2}] == [a: 1, a: 0, b: 2]`
-  - accessing `kw_list[:a] == 1`
-- map `%{"a" => 1, :b => 2, 3 => "c"}` `%{a: 1, b: 2}`
-  - accessing `map[:a] == map.a`
-- struct `%City{name: "Nashville"} == %{__struct__: City, name: "Nashville"}`
+- tuple
+```elixir
+{:ok, "response"}
+{:ok, {:sent, "data"}}
+```
+
+- list
+```elixir
+[1, "b", :c, true]
+```
+  - linked
+  ```elixir
+  [head | tail] = [1 | [2 | [3 | []]]]
+  # head = 1
+  # tail = [2, 3]
+  ```
+  - io list
+  ```elixir
+  # "improper" list, but all printable elements
+  ["Hello, ", [87, 111, 114, 108, 100]] == "Hello, World"
+  ```
+
+- keyword list
+```elixir
+[{:a, 1}, {:a, 0}, {:b, 2}] == [a: 1, a: 0, b: 2]
+
+# access with the atom, retrieving the first result
+kw_list[:a] == 1
+```
+- map
+```elixir
+map = %{"a" => 1, :b => 2, 3 => "c"}
+map["a"] == 1
+
+atom_map = %{a: 1, b: 2}
+atom_map.a == 1
+```
+- struct
+```elixir
+%City{name: "Nashville"} == %{__struct__: City, name: "Nashville"}
+```
 - function
-  ```elixir
-  def add(a, b) do
-    a + b
-  end
-  ```
-  - keyword list format
-  ```elixir
-  def add(a, b), do: a + b
-  ```
+```elixir
+def add(a, b) do
+  a + b
+end
+
+# equivalent with keyword list instead of do/end block
+def add(a, b), do: a + b
+```
   - anonymous
-  ```elixir
-  add = fn (a, b) -> a + b end
-  add.(1, 2)
-  ```
+```elixir
+add = fn (a, b) -> a + b end
+add.(1, 2)
+```
   - arity
   ```elixir
+  # different arities are different functions
   def add(a, b), do: a + b          # add/2
   def add(a, b, c), do: a + b + c   # add/3
   ```
@@ -144,6 +203,7 @@ Types can be checked with the `is_type` functions, such as `is_atom`, `is_binary
   ```elixir
   String.replace(String.upcase("hello world"), " ", "_")
 
+  # output becomes the first argument of the following
   "hello world"
   |> String.upcase
   |> String.replace(" ", "_")
