@@ -621,6 +621,23 @@ of time in well-developed systems when the situation is appropriate.
 
 ## Macros
 
+Elixir is built with extensiblity in mind, down to the language itself.
+
+Macros provide metaprogramming to the language. Portions of the native language are written with macros (including
+`if`/`unless` which are built on top of `cond`).
+
+Macros provide a powerful mechanism to build domain specific languages, such as Phoenix's router, but they come at
+a cost of language transparency.
+
+A Phoenix GET HTTP route.
+```elixir
+get "/", PageController, :index
+```
+
+The expanded `match/5` function underlying the macro.
+```elixir
+def match(:get, "/", PageController, :index, [])
+```
 
 ## Resources
 - [Elixir Docs](https://elixir-lang.org/getting-started/introduction.html)
