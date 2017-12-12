@@ -335,5 +335,6 @@ Insead of special constructs, `if` and `unless` are implemented as macros around
 ## Resources
 - [Elixir Docs](https://elixir-lang.org/getting-started/introduction.html)
 - [hexdocs Elixir](https://hexdocs.pm/elixir/)
+- [Learn Elixir in Y minutes](https://learnxinyminutes.com/docs/elixir/)
 - [Programming Elixir](https://pragprog.com/book/elixir13/programming-elixir-1-3)
 - [Elixir In Action](https://www.manning.com/books/elixir-in-action)
