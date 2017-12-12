@@ -162,7 +162,14 @@ Types can be checked with the `is_type` functions, such as `is_atom`, `is_binary
 ## Operators
 - arithmetic (`+`, `-`, `*`, `/`, `div`, `rem`)
   - `/` always produces a float result
-  - `div` and `rem` are integer division and remainder operators
+    ```elixir
+    5 / 2 == 2.5
+    ```
+  - `div` and `rem` are integer division and remainder functions
+    ```elixir
+    div(5, 2) == 2
+    rem(5, 2) == 1
+    ```
 - list manipulation (`++`, `--`)
   ```elixir
   [1, 2, 3] ++ [4, 5, 6] == [1, 2, 3, 4, 5, 6]
