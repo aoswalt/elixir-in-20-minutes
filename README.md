@@ -150,9 +150,56 @@ Types can be checked with the `is_type` functions, such as `is_atom`, `is_binary
   ```
 
 ## Code Organization
+
 ### Functions
+
+Except for a small set of core functions that operate at the system level, such as `Calendar.date/0`,
+all functions in Elixir transform input into output.
+
 ### Modules (alias, require, import, use) (attributes)
+
+Modules serve as a mechanism to group related functions and provide a namespace.
+
+At compile time, modules may be augmented by the `alias`, `require`, and `import` directives and the `use` macro.
+- `alias` allows for creating more friendly names for modules.
+Calling without the `:as` option uses the last part of the module name.
+```elixir
+alias Math.Coordinate, as: Coord
+alias Math.Coordinate
+```
+- `require` allows using macros defined in a module.
+```elixir
+require Integer
+Integer.is_odd(5)
+```
+- `import` provides access to fuctions or macros without using the full name.
+```elixir
+import Enum, only: [map: 2]
+```
+- `use` requires a module and invokes its `__using__/1` macro to inject code into the calling module.
+```elixir
+use Feature, option: :value
+```
+
+Multiple modules may be referenced by the same directive by using braces.
+```elixir
+alias MyApp.{Foo, Bar, Baz}
+```
+
+Defining a struct inside a module creates a tagged map that allows for
+compile time guarantees, default values, and a common data element to build functions around.
+
 ### Applications
+
+An application is a complete component providing a specific set of functionality that operates as a unit and
+may be re-used in other systems.
+Applications form the building blocks of a full Elixir system.
+
+An example web server may include a set of distinct applications for its separate concerns:
+- web api
+- database access
+- encapsulated library of business logic
+- event sourcing handlers
 
 ## Pattern Matching
 railway oriented / happy-path programming - with
