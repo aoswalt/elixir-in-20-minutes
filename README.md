@@ -247,11 +247,49 @@ end
 ```
 
 ## Control Flow
-### if/unless
-### cond (if/unless macros to cond)
-### case
-### do/end vs keyword list
-### with
+
+While pattern matching is the most common method of control flow, other structures are used to varying degrees.
+
+- `case` compares a value against patterns until a matching one is found.
+```elixir
+case {2, 1} do
+  {0, 0} -> "At the origin"
+  {0, y} -> "On the X axis at #{y}"
+  {x, 0} -> "On the Y axis at #{x}"
+  {_, _} -> "Not axis aligned"
+  _ -> "Not a valid point"
+end
+```
+
+- `cond` tests multiple conditions until one evaluates to true (any value besides `nil` and `false`).
+```elixir
+cond do
+  2 + 2 == 5 ->
+    "This is never true"
+  2 * 2 == 3 ->
+    "Nor this"
+  true ->
+    "This is always true (equivalent to else)"
+end
+```
+
+- `if` and `unless` are commonly not needed but can be useful if checking for a single condition.
+```elixir
+if true do
+  "Do the thing"
+end
+# returns nil
+```
+
+```elixir
+unless true do
+  "Unless matches if false"
+else
+  "So this is the result"
+end
+```
+
+Insead of special constructs, `if` and `unless` are implemented as macros around `cond`.
 
 ## Recursion
 ### for is mutability
