@@ -278,7 +278,6 @@ end
 if true do
   "Do the thing"
 end
-# returns nil
 ```
 
 ```elixir
