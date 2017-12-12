@@ -45,119 +45,117 @@ end
 ## Types
 - nil
 - atom (symbol)
-```elixir
-:atom
-```
+  ```elixir
+  :atom
+  ```
   - alias
-  ```elixir
-  Atom == :"Elixir.Atom"
-  ```
+    ```elixir
+    Atom == :"Elixir.Atom"
+    ```
 - boolean
-```elixir
-true == :true
-```
+  ```elixir
+  true == :true
+  ```
 - integer
-```elixir
-1000000 == 1_000_000
-```
+  ```elixir
+  1000000 == 1_000_000
+  ```
 - float
-```elixir
-0.01 == 1.0e-2
-```
+  ```elixir
+  0.01 == 1.0e-2
+  ```
 - string (binary)
-```elixir
-"hi" == <<104, 105>>
-```
+  ```elixir
+  "hi" == <<104, 105>>
+  ```
   - charlist
-  ```elixir
-  'hi' == [104, 105]
-  ```
+    ```elixir
+    'hi' == [104, 105]
+    ```
   - sigil
-  ```elixir
-  ~S(No \n escaping or #{interpolating}) == "No \\n escaping or \#{interpolating}"
+    ```elixir
+    ~S(No \n escaping or #{interpolating}) == "No \\n escaping or \#{interpolating}"
 
-  "foo" =~ ~r/foo|bar/
-  ~r"foo|bar"i == sigil_r(<<"foo|bar">>, 'i')
-  ```
+    "foo" =~ ~r/foo|bar/
+    ~r"foo|bar"i == sigil_r(<<"foo|bar">>, 'i')
+    ```
   - heredoc
-  ```elixir
-  """
-  this is
-  a heredoc string
-  """
-  ```
+    ```elixir
+    """
+    this is
+    a heredoc string
+    """
+    ```
 - tuple
-```elixir
-{:ok, "response"}
-{:ok, {:sent, "data"}}
-```
-
+  ```elixir
+  {:ok, "response"}
+  {:ok, {:sent, "data"}}
+  ```
 - list
-```elixir
-[1, "b", :c, true]
-```
+  ```elixir
+  [1, "b", :c, true]
+  ```
   - linked
-  ```elixir
-  [head | tail] = [1 | [2 | [3 | []]]]
-  # head = 1
-  # tail = [2, 3]
-  ```
+    ```elixir
+    [head | tail] = [1 | [2 | [3 | []]]]
+    # head = 1
+    # tail = [2, 3]
+    ```
   - io list
-  ```elixir
-  # "improper" list, but all printable elements
-  ["Hello, ", [87, 111, 114, 108, 100]] == "Hello, World"
-  ```
-
+    ```elixir
+    # "improper" list, but all printable elements
+    ["Hello, ", [87, 111, 114, 108, 100]] == "Hello, World"
+    ```
 - keyword list
-```elixir
-[{:a, 1}, {:a, 0}, {:b, 2}] == [a: 1, a: 0, b: 2]
+  ```elixir
+  [{:a, 1}, {:a, 0}, {:b, 2}] == [a: 1, a: 0, b: 2]
 
-# access with the atom, retrieving the first result
-kw_list[:a] == 1
-```
+  # access with the atom, retrieving the first result
+  kw_list[:a] == 1
+  ```
 - map
-```elixir
-map = %{"a" => 1, :b => 2, 3 => "c"}
-map["a"] == 1
+  ```elixir
+  map = %{"a" => 1, :b => 2, 3 => "c"}
+  map["a"] == 1
 
-atom_map = %{a: 1, b: 2}
-atom_map.a == 1
-```
+  atom_map = %{a: 1, b: 2}
+  atom_map.a == 1
+  ```
 - struct
-```elixir
-%City{name: "Nashville"} == %{__struct__: City, name: "Nashville"}
-```
+  ```elixir
+  %City{name: "Nashville"} == %{__struct__: City, name: "Nashville"}
+  ```
 - function
-```elixir
-def add(a, b) do
-  a + b
-end
-
-# equivalent with keyword list instead of do/end block
-def add(a, b), do: a + b
-```
-  - anonymous
-```elixir
-add = fn (a, b) -> a + b end
-add.(1, 2)
-```
-  - arity
   ```elixir
-  # different arities are different functions
-  def add(a, b), do: a + b          # add/2
-  def add(a, b, c), do: a + b + c   # add/3
-  ```
-  - capturing
-  ```elixir
-  def add(a, b), do: a + b
-  fun = &add/2
-  ```
-  - default arguments
-  ```elixir
-  def hello(name \\ "world") do
-    "hello, " <> name
+  def add(a, b) do
+    a + b
   end
+
+  # equivalent with keyword list instead of do/end block
+  def add(a, b), do: a + b
   ```
+  - anonymous
+    ```elixir
+    add = fn (a, b) -> a + b end
+    add.(1, 2)
+    ```
+  - arity
+    ```elixir
+    # different arities are different functions
+    def add(a, b), do: a + b          # add/2
+    def add(a, b, c), do: a + b + c   # add/3
+    ```
+  - capturing
+    ```elixir
+    def add(a, b), do: a + b
+    fun = &add/2
+    ```
+  - default arguments
+    ```elixir
+    def hello(name \\ "world") do
+      "hello, " <> name
+    end
+    ```
 
 Types can be checked with the `is_type` functions, such as `is_atom`, `is_binary`, `is_map`, etc.
 
@@ -223,23 +221,23 @@ Modules serve as a mechanism to group related functions and provide a namespace.
 At compile time, modules may be augmented by the `alias`, `require`, and `import` directives and the `use` macro.
 - `alias` allows for creating more friendly names for modules.
 Calling without the `:as` option uses the last part of the module name.
-```elixir
-alias Math.Coordinate, as: Coord
-alias Math.Coordinate
-```
+  ```elixir
+  alias Math.Coordinate, as: Coord
+  alias Math.Coordinate
+  ```
 - `require` allows using macros defined in a module.
-```elixir
-require Integer
-Integer.is_odd(5)
-```
+  ```elixir
+  require Integer
+  Integer.is_odd(5)
+  ```
 - `import` provides access to fuctions or macros without using the full name.
-```elixir
-import Enum, only: [map: 2]
-```
+  ```elixir
+  import Enum, only: [map: 2]
+  ```
 - `use` requires a module and invokes its `__using__/1` macro to inject code into the calling module.
-```elixir
-use Feature, option: :value
-```
+  ```elixir
+  use Feature, option: :value
+  ```
 
 Multiple modules may be referenced by the same directive by using braces.
 ```elixir
@@ -311,42 +309,38 @@ end
 While pattern matching is the most common method of control flow, other structures are used to varying degrees.
 
 - `case` compares a value against patterns until a matching one is found.
-```elixir
-case {2, 1} do
-  {0, 0} -> "At the origin"
-  {0, y} -> "On the X axis at #{y}"
-  {x, 0} -> "On the Y axis at #{x}"
-  {_, _} -> "Not axis aligned"
-  _ -> "Not a valid point"
-end
-```
-
+  ```elixir
+  case {2, 1} do
+    {0, 0} -> "At the origin"
+    {0, y} -> "On the X axis at #{y}"
+    {x, 0} -> "On the Y axis at #{x}"
+    {_, _} -> "Not axis aligned"
+    _ -> "Not a valid point"
+  end
+  ```
 - `cond` tests multiple conditions until one evaluates to true (any value besides `nil` and `false`).
-```elixir
-cond do
-  2 + 2 == 5 ->
-    "This is never true"
-  2 * 2 == 3 ->
-    "Nor this"
-  true ->
-    "This is always true (equivalent to else)"
-end
-```
-
+  ```elixir
+  cond do
+    2 + 2 == 5 ->
+      "This is never true"
+    2 * 2 == 3 ->
+      "Nor this"
+    true ->
+      "This is always true (equivalent to else)"
+  end
+  ```
 - `if` and `unless` are commonly not needed but can be useful if checking for a single condition.
-```elixir
-if true do
-  "Do the thing"
-end
-```
+  ```elixir
+  if true do
+    "Do the thing"
+  end
 
-```elixir
-unless true do
-  "Unless matches if false"
-else
-  "So this is the result"
-end
-```
+  unless true do
+    "Unless matches if false"
+  else
+    "So this is the result"
+  end
+  ```
 
 Insead of special constructs, `if` and `unless` are implemented as macros around `cond`.
 
@@ -382,20 +376,19 @@ counterpart the `Stream` module.
 These modules provide methods, such as `map`, `filter`, and `reduce`, for working with collections of data.
 
 - Sum the double value of all even numbers from 1 to 100,000, iterating over the collection for each operation.
-```elixir
-1..100_000
-|> Enum.filter(even?)
-|> Enum.map(&(&1 * 2))
-|> Enum.sum
-```
-
+  ```elixir
+  1..100_000
+  |> Enum.filter(even?)
+  |> Enum.map(&(&1 * 2))
+  |> Enum.sum
+  ```
 - Using the lazy `Stream`, the collection is only iterated over once.
-```elixir
-1..100_000
-|> Stream.filter(even?)
-|> Stream.map(&(&1 * 2))
-|> Enum.sum
-```
+  ```elixir
+  1..100_000
+  |> Stream.filter(even?)
+  |> Stream.map(&(&1 * 2))
+  |> Enum.sum
+  ```
 
 ### Comprehensions
 
