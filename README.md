@@ -355,7 +355,37 @@ for {key, val} <- %{"a" => 1, "b" => 2}, into: %{}, do: {key, val * val}
 - `{key, val}` pattern matches to extract the elements and filters to only operate on tuples
 - `into: %{}` uses a map as a collectable, mapping the tuples into the new map
 
-## Protocols (polymorphism)
+## Protocols
+
+Protocols are the primary method of polymorphism in Elixir.
+
+Data types that implement a protocol define implementations of functions that are applicable across varied
+types.  Implementations of a protocol may be defined at the data type definition or separately
+(for built-in types, etc.).
+
+```elixir
+defprotocol Size do
+  @doc "Calculates the size (not the length!) of a data structure"
+  def size(data)
+end
+
+defimpl Size, for: BitString do
+  def size(string), do: byte_size(string)
+end
+
+defimpl Size, for: Map do
+  def size(map), do: map_size(map)
+end
+
+defimpl Size, for: Tuple do
+  def size(tuple), do: tuple_size(tuple)
+end
+
+Size.size("hello") == 5
+Size.size({:ok, "data"}) == 2
+Size.size(%{a: 1}) == 1
+Size.size([1, 2, 3])  # Protocol.UndefinedError
+```
 
 ## Behaviours (apis)
 
