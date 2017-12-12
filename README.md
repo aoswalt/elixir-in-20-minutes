@@ -423,10 +423,37 @@ end
 
 
 ## Error Handling
-### error
+
+Elixir has three mechanisms for directly dealing with exeptional circumstances.
+
+### errors (exceptions)
+
+For exceptional circumstances, such as outcomes of opening a file, an error may be raised with `raise/1` or
+`raise/2`. Errors may be rescued by using `try/rescue`, optionally pulling details out of the error.
+
+Typically, `try/rescue` is rarely used in favor of `{:ok, result}` and `{:error, reason}` tuples to allow
+graceful handling of these circumstances.
+
+Many libraries provide pairs of functions that deal with more unpredictable operations. The `foo` form
+returns `:ok/:error` tupeles, and the `foo!` form raises execptions. This separation allows the developer
+to choose how to deal with the exceptional circumstances.
+
 ### throw
+
+`throw` and `catch` are typically reserved for working with libraries that do not have a proper API and a
+value can only be accessed in a `catch` after a `throw`.
+
 ### exit
+
+Within Elixir's processes, an `exit` signal informs a process to die. This forms one of the foundational
+aspects of the system's fault-tolerance.
+
 ### let it crash
+
+Once all of the predictable error situations are accounted for in a developed system, the accepted strategy
+is to "let it crash". Typically, these circumstances are caused by an unexpected state, and letting the process
+crash allows a clean state to be restored. The strategies defined in the application's supervision tree are
+implemented to account for these unpredictable occurances.
 
 ## Tooling
 ### ExUnit (doctest)
