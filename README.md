@@ -219,7 +219,7 @@ end
 
 Math.zero?(0) == true
 Math.zero?(1) == false
-math.zero?(0.5)  # FunctionClauseError
+Math.zero?(0.5)  # FunctionClauseError
 ```
 
 Pattern matching enables a programming style known as railway-oriented or happy-path programming.
