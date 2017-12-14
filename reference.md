@@ -1,14 +1,19 @@
 # Elixir in 20 Minutes
 
-[Full Reference](./reference.md)
-
 [Elixir](https://elixir-lang.org/) is a functional programming language built on top of [Erlang](http://www.erlang.org/).
-By compiling to the BEAM (Erlang's virtual machine), Elixir can leverage all of the power of the OTP system while having a
-more user-friendly syntax that is scalable and maintainable.
-OTP, originally an acronym for Open Telecom Platform, is a collection of components that comprise the foundation of Erlang's resilience.
+Its focus is on building scalable and maintainable software on distributed and fault-tolerant systems.
 
 #### Web Server Comparison
 [![Web Server Comparsion](./images/web-server-comparison.jpg "Web Server Comparison")](https://www.manning.com/books/elixir-in-action)
+
+## History
+- Erlang was created in 1986 by Ericsson to drive their telephone switches.
+  - OTP, originally an acronym for Open Telecom Platform, is a collection of components that comprise the foundation of Erlang's resilience.
+- Elixir was created by José Valim as an R&D project of Plataformatec.
+  - José was a member of the Rails core team and wanted to build a friendly language like Ruby.
+  - The goal was to build a more extensible and developer-friendly language while staying compatible with Erlang.
+- Elixir compiles to bytecode for the BEAM (Erlang's virtual machine).
+  - For simple programs, Elixir can be used as a scripting language.
 
 ### Syntax Comparison
 
@@ -43,6 +48,44 @@ end
   ```elixir
   :atom
   ```
+  - alias
+    ```elixir
+    Atom == :"Elixir.Atom"
+    ```
+- boolean
+  ```elixir
+  true == :true
+  ```
+- integer
+  ```elixir
+  1000000 == 1_000_000
+  ```
+- float
+  ```elixir
+  0.01 == 1.0e-2
+  ```
+- string (binary)
+  ```elixir
+  "hi" == <<104, 105>>
+  ```
+  - charlist
+    ```elixir
+    'hi' == [104, 105]
+    ```
+  - sigil
+    ```elixir
+    ~S(No \n escaping or #{interpolating}) == "No \\n escaping or \#{interpolating}"
+
+    "foo" =~ ~r/foo|bar/
+    ~r"foo|bar"i == sigil_r(<<"foo|bar">>, 'i')
+    ```
+  - heredoc
+    ```elixir
+    """
+    this is
+    a heredoc string
+    """
+    ```
 - tuple
   ```elixir
   {:ok, "response"}
@@ -52,6 +95,17 @@ end
   ```elixir
   [1, "b", :c, true]
   ```
+  - linked
+    ```elixir
+    [head | tail] = [1 | [2 | [3 | []]]]
+    # head = 1
+    # tail = [2, 3]
+    ```
+  - io list
+    ```elixir
+    # "improper" list, but all printable elements
+    ["Hello, ", [87, 111, 114, 108, 100]] == "Hello, World"
+    ```
 - keyword list
   ```elixir
   [{:a, 1}, {:a, 0}, {:b, 2}] == [a: 1, a: 0, b: 2]
@@ -103,7 +157,19 @@ end
     end
     ```
 
+Types can be checked with the `is_type` functions, such as `is_atom`, `is_binary`, `is_map`, etc.
+
 ## Operators
+- arithmetic (`+`, `-`, `*`, `/`, `div`, `rem`)
+  - `/` always produces a float result
+    ```elixir
+    5 / 2 == 2.5
+    ```
+  - `div` and `rem` are integer division and remainder functions
+    ```elixir
+    div(5, 2) == 2
+    rem(5, 2) == 1
+    ```
 - list manipulation (`++`, `--`)
   ```elixir
   [1, 2, 3] ++ [4, 5, 6] == [1, 2, 3, 4, 5, 6]
@@ -113,6 +179,20 @@ end
   ```elixir
   "foo" <> "bar" == "foobar"
   ```
+- strict boolean (`or`, `and`, `not`)
+  - require boolean as first operand
+- lax boolean (`||`, `&&`, `!`)
+  - accepts any type
+  - everything except false and nil are true
+- comparison (`==`, `!=`, `===`, `!==`, `>=`, `<=`, `<`, `>`)
+  ```elixir
+  1 == 1.0   # true
+  1 === 1.0  # false
+  ```
+  - data type ordering
+    ```elixir
+    number < atom < reference < function < port < pid < tuple < map < list < bitstring
+    ```
 - match (`=`)
   ```elixir
   a = "a"   # "a"
@@ -132,8 +212,6 @@ end
   "hello world"
   |> String.upcase
   |> String.replace(" ", "_")
-
-  # result: "HELLO_WORLD"
   ```
 
 ## Code Organization
@@ -147,12 +225,48 @@ all functions in Elixir transform input into output.
 
 Modules serve as a mechanism to group related functions and provide a namespace.
 
+At compile time, modules may be augmented by the `alias`, `require`, and `import` directives and the `use` macro.
+- `alias` allows for creating more friendly names for modules.
+Calling without the `:as` option uses the last part of the module name.
+  ```elixir
+  alias Math.Coordinate, as: Coord
+  alias Math.Coordinate
+  ```
+- `require` is required to use macros defined in the required module.
+  ```elixir
+  require Integer
+  Integer.is_odd(5)
+  ```
+- `import` provides access to fuctions or macros without using the full name.
+  ```elixir
+  import Enum, only: [map: 2]
+  ```
+- `use` requires a module and invokes its `__using__/1` macro to inject code into the calling module.
+  ```elixir
+  use Feature, option: :value
+  ```
+
+Multiple modules may be referenced by the same directive by using braces.
+```elixir
+alias MyApp.{Foo, Bar, Baz}
+```
+
 Module attributes, defined with `@` such as `@limit 10`, are commonly used to defined module scoped constants.
+
+Defining a struct inside a module creates a tagged map that allows for
+compile time guarantees, default values, and a common data element to build functions around.
 
 ### Applications
 
 An application is a complete component providing a specific set of functionality that operates as a unit and
 may be re-used in other systems.
+Applications form the building blocks of a full Elixir system.
+
+An example web server may include a set of distinct applications for its separate concerns:
+- web API
+- database access
+- encapsulated library of business logic
+- event sourcing handlers
 
 ## Pattern Matching
 
@@ -180,23 +294,36 @@ such as `{:ok, data}` and `{:error, error}`.
 This allows for functions to be piped together.
 The successful operations continue being processed while any errors are rerouted to be handled gracefully.
 
+A common practice is to use `with` to handle the branching paths.
+
+```elixir
+with {:ok, response} <- Api.fetch(@url),
+     mapped_data = Enum.map(response, &format/1),
+     {:ok, processed} <- Lib.process(mapped_data) do
+  {:ok, processed}
+else
+  {:error, {:network_error, fetch_details}} ->
+    {:error, format_error_details(details)},
+  {:error, {:processing_error, processing_details}} ->
+    {:error, processing_details},
+  error ->
+    {:error, error}
+end
+```
+
 ## Control Flow
 
 While pattern matching is the most common method of control flow, other structures are used to varying degrees.
 
 - `case` compares a value against patterns until a matching one is found.
   ```elixir
-  point = {2, 1}
-
-  case point do
+  case {2, 1} do
     {0, 0} -> "At the origin"
     {0, y} -> "On the X axis at #{y}"
     {x, 0} -> "On the Y axis at #{x}"
     {_, _} -> "Not axis aligned"
     _ -> "Not a valid point"
   end
-
-  # returns "Not axis aligned"
   ```
 - `cond` tests multiple conditions until one evaluates to true (any value besides `nil` and `false`).
   ```elixir
@@ -222,10 +349,16 @@ While pattern matching is the most common method of control flow, other structur
   end
   ```
 
+Insead of special constructs, `if` and `unless` are implemented as macros around `cond`.
+
 ## Recursion
 
 Functional languages make use of recursion more commonly than object oriented languages due to immutability.
 Common `for` loops rely on mutability in incrementing the counter.
+
+Elixir is optimized for tail calls such that, if the last operation of a function is a call to itself,
+a new stack frame is not allocated, making it a free operation. Languages without this optimization can lead
+to stack overflows at large recursive tasks.
 
 Pattern matching allows for simpler recurive functions by separating conditions into separate clauses.
 ```elixir
@@ -239,39 +372,6 @@ def print_repeated(msg, count) do
 end
 
 print_repeated("echo", 4)   # prints "echo" 4 times
-```
-
-## Protocols
-
-Protocols are the primary method of polymorphism in Elixir.
-
-Data types that implement a protocol define implementations of functions that are applicable across varied
-types.  Implementations of a protocol may be defined at the data type definition or separately
-(for built-in types, etc.).
-
-```elixir
-defprotocol Size do
-  @doc "Calculates the size (not the length!) of a data structure"
-  def size(data)
-end
-
-# BitString, Map, and Tuple are different types that have a size
-defimpl Size, for: BitString do
-  def size(string), do: byte_size(string)
-end
-
-defimpl Size, for: Map do
-  def size(map), do: map_size(map)
-end
-
-defimpl Size, for: Tuple do
-  def size(tuple), do: tuple_size(tuple)
-end
-
-Size.size("hello") == 5
-Size.size({:ok, "data"}) == 2
-Size.size(%{a: 1}) == 1
-Size.size([1, 2, 3])  # Protocol.UndefinedError
 ```
 
 ### Enumerable
@@ -297,10 +397,59 @@ These modules provide methods, such as `map`, `filter`, and `reduce`, for workin
   |> Enum.sum
   ```
 
+### Comprehensions
+
+Because it is common to iterate over enumerables to transform the collection, Elixir offers the comprehension
+construct composed of generators, filters, and collectables.
+- generators provide the collection to be used
+- filters limit the operation to the values satisfying the filter
+- collectables provide a mechanism to convert to a different data structure
+
+```elixir
+for {key, val} <- %{"a" => 1, "b" => 2}, into: %{}, do: {key, val * val}
+%{"a" => 1, "b" => 4}
+
+```
+- `%{"a" => 1, "b" => 2}` uses the elements of a map as the generator
+- `{key, val}` pattern matches to extract the elements and filters to only operate on tuples
+- `into: %{}` uses a map as a collectable, mapping the tuples into the new map
+
+## Protocols
+
+Protocols are the primary method of polymorphism in Elixir.
+
+Data types that implement a protocol define implementations of functions that are applicable across varied
+types.  Implementations of a protocol may be defined at the data type definition or separately
+(for built-in types, etc.).
+
+```elixir
+defprotocol Size do
+  @doc "Calculates the size (not the length!) of a data structure"
+  def size(data)
+end
+
+defimpl Size, for: BitString do
+  def size(string), do: byte_size(string)
+end
+
+defimpl Size, for: Map do
+  def size(map), do: map_size(map)
+end
+
+defimpl Size, for: Tuple do
+  def size(tuple), do: tuple_size(tuple)
+end
+
+Size.size("hello") == 5
+Size.size({:ok, "data"}) == 2
+Size.size(%{a: 1}) == 1
+Size.size([1, 2, 3])  # Protocol.UndefinedError
+```
+
 ## Behaviours
 
 Similar to interfaces in object oriented languages, behaviours define a public API that must be
-implemented for a module to encapsulate varying sets of logic in the same types of modules.
+implemented for a module to encapsulate varying sets of logic.
 
 ```elixir
 defmodule Parser do
@@ -316,7 +465,6 @@ defmodule Parser do
 end
 
 
-# JSONParser and YAMLParser are both parsers but different types
 defmodule JSONParser do
   @behaviour Parser
 
@@ -331,6 +479,40 @@ defmodule YAMLParser do
   def extensions, do: ["yml"]
 end
 ```
+
+
+## Error Handling
+
+Elixir has three mechanisms for directly dealing with exeptional circumstances.
+
+### errors (exceptions)
+
+For exceptional circumstances, such as outcomes of opening a file, an error may be raised with `raise/1` or
+`raise/2`. Errors may be rescued by using `try/rescue`, optionally pulling details out of the error.
+
+Typically, `try/rescue` is rarely used in favor of `{:ok, result}` and `{:error, reason}` tuples to allow
+graceful handling of these circumstances.
+
+Many libraries provide pairs of functions that deal with more unpredictable operations. The `foo` form
+returns `:ok/:error` tuples, and the `foo!` form raises execptions. This separation allows the developer
+to choose how to deal with the exceptional circumstances.
+
+### Throw
+
+`throw` and `catch` are typically reserved for working with libraries that do not have a proper API and a
+value can only be accessed in a `catch` after a `throw`.
+
+### Exit
+
+Within Elixir's processes, an `exit` signal informs a process to die. This forms one of the foundational
+aspects of the system's fault-tolerance.
+
+### Let It Crash
+
+Once all of the predictable error situations are accounted for in a developed system, the accepted strategy
+is to "let it crash". Typically, these circumstances are caused by an unexpected state, and letting the process
+crash allows a clean state to be restored. The strategies defined in the application's supervision tree are
+implemented to account for these unpredictable occurances.
 
 ## Tooling
 
@@ -385,6 +567,22 @@ def add(a, b) do
 end
 ```
 
+### Typespecs
+
+Being a dynamically typed language, types are not enforced during compilation; however, Elixir has support for
+typespecs, a notation for declaring data types and specifications for typed function signatures.
+
+```elixir
+@spec add(number, number) :: number
+def add(a, b) do
+  a + b
+end
+```
+
+Typespecs server as an additional layer of documentation. Also, Dialyzer is an Erlang tool for static code
+analysis to check code against the defined types and specs. The Dialyxir application provides an Elixir
+focused wrapper for Dialyzer.
+
 ## Processes
 
 Processes form the core of state and concurrency in Elixir. The scheduler ensures all processes get equal
@@ -399,6 +597,16 @@ processes the communicate by message passing.
 
 Each process is a lightweight unit separate from operating system processes and threads. It is not uncommon to
 have tens or hundreds of thousands of processes running simultaneously on a single machine.
+
+### Tasks
+
+When simple async operations are needed, Elixir provides the Task module as a simple interface.
+
+```elixir
+task = Task.async(fn -> do_some_work() end)
+res  = do_some_other_work()
+res + Task.await(task)
+```
 
 ### Messaging
 
@@ -434,6 +642,11 @@ includes a wide array of tools and components for building a distributed, fault-
 Abstracting the manual setup of a state-holding process, Elixir provides the GenServer behaviour module as a
 foundational unit to build upon.
 
+#### Agents
+
+When persistent state is needed without the full support for varying operations, Elixir provides the Agent module
+to abstract away the unneeded complexity.
+
 ### Supervisor
 
 A Supervisor manages the lifecycle of its GenServer children, defining their restart strategies, initial state, and
@@ -449,12 +662,6 @@ strategies, a GenServer with unexpected state can crash and be restarted with we
 gracefully handle the situation. In the event the issue persists, the failures will begin to bubble up the
 supervision tree until a good state is achieved or the entire application crashes.
 
-#### `:ok`/`:error`
-
-Many libraries provide pairs of functions that deal with more unpredictable operations. The `foo` form
-returns `:ok`/`:error` tuples, and the `foo!` form raises execptions. This separation allows the developer
-to choose how to deal with the exceptional circumstances.
-
 ### Umbrella Applications
 
 One of the primary uses of applications is to separate supervision responsibilities. When a supervision tree can
@@ -463,19 +670,26 @@ together under an umbrella application.
 
 This provides a way to have separate concerns within the same code base but allow different managment strategies.
 
-An example web server may include a set of distinct applications for its separate concerns within a single umbrella
-application:
-- web API
-- database access
-- encapsulated library of business logic
-- event sourcing handlers
+### ETS
+
+Inherently, process state is contained only within that process, so the process can become a bottleneck in the
+system.
+
+Erlang provides an in-memory key-value data store known as ETS, or Erlang Term Storage. Once the bottleneck in
+the system is well-defined, ETS can serve as a caching mechanism for data.
+
+### Mnesia
+
+When ETS does not fit the needs and a more thorough system is needed, Erlang provides Mnesia, an in-memory
+relational and object hyprid Database Management System. The system is fully in-memory, but it has stood the test
+of time in well-developed systems when the situation is appropriate.
 
 ## Macros
 
 Elixir is built with extensiblity in mind, down to the language itself.
 
 Macros provide metaprogramming to the language. Portions of the native language are written with macros (including
-`if`/`unless` which are macros around `cond`).
+`if`/`unless` which are built on top of `cond`).
 
 Macros provide a powerful mechanism to build domain specific languages, such as Phoenix's router, but they come at
 a cost of language transparency.
