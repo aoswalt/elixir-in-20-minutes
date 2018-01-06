@@ -10,46 +10,42 @@ defmodule FizzBuzz do
   """
 
   @doc """
-  Prints 1 to the specified positive integer limit following the fizzbuzz rules.
+  Generate a list of values from 1 to the specified positive integer limit
+  following the fizzbuzz rules.
   """
-  def count_to(limit)
-
-  def count_to(limit) when is_integer(limit) and limit > 0 do
-    print(1, limit)
+  def generate(limit) when is_integer(limit) and limit > 0 do
+    count(1, limit)
   end
 
-  def count_to(limit) when is_integer(limit) do
-    IO.puts "Expected a positive integer"
-    :ok
+  def generate(limit) when is_integer(limit) do
+    {:error, "Expected a positive integer"}
   end
 
-  def count_to(_) do
-    IO.puts "Expected a positive integer to count to"
-    :ok
+  def generate(_) do
+    {:error, "Expected a positive integer to count to"}
   end
 
 
-  defp print(n, limit) when n > limit do
-    :ok
+  defp count(n, limit, list \\ [])
+
+  defp count(n, limit, list) when n > limit do
+    # list is built backwards, so reversing to natural order for final result
+    Enum.reverse(list)
   end
 
-  defp print(n, limit) when rem(n, 3) == 0 and rem(n, 5) == 0 do
-    IO.puts "fizzbuzz"
-    print(n + 1, limit)
+  defp count(n, limit, list) when rem(n, 3) == 0 and rem(n, 5) == 0 do
+    count(n + 1, limit, ["fizzbuzz" | list])
   end
 
-  defp print(n, limit) when rem(n, 5) == 0 do
-    IO.puts "buzz"
-    print(n + 1, limit)
+  defp count(n, limit, list) when rem(n, 5) == 0 do
+    count(n + 1, limit, ["buzz" | list])
   end
 
-  defp print(n, limit) when rem(n, 3) == 0 do
-    IO.puts "fizz"
-    print(n + 1, limit)
+  defp count(n, limit, list) when rem(n, 3) == 0 do
+    count(n + 1, limit, ["fizz" | list])
   end
 
-  defp print(n, limit) do
-    IO.puts n
-    print(n + 1, limit)
+  defp count(n, limit, list) do
+    count(n + 1, limit, [n | list])
   end
 end
